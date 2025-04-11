@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat IA</title>
+  <style>
+    body { font-family: sans-serif; background: #f3f3f3; padding: 20px; }
+    #chat-box { background: #fff; padding: 20px; border-radius: 10px; height: 400px; overflow-y: auto; margin-bottom: 10px; }
+    .mensaje { margin: 10px 0; }
+    .usuario { color: blue; }
+    .ia { color: green; }
+  </style>
+</head>
+<body>
+  <div id="chat-box"></div>
+  <input type="text" id="input" placeholder="Escribe algo..." style="width: 80%;" />
+  <button onclick="enviar()">Enviar</button>
+
+  <script>
+    let historial = [];
+    async function enviar() {
+      const input = document.getElementById('input');
+      const mensaje = input.value;
+      input.value = '';
+      const chat = document.getElementById('chat-box');
+      chat.innerHTML += `<div class="mensaje usuario"><strong>Tú:</strong> ${mensaje}</div>`;
+
+      historial.push({ role: 'user', content: mensaje });
+
+      const res = await fetch('http://localhost:3000/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ historial })
+      });
+      const data = await res.json();
+      chat.innerHTML += `<div class="mensaje ia"><strong>IA:</strong> ${data.respuesta}</div>`;
+      historial.push({ role: 'assistant', content: data.respuesta });
+    }
+  </script>
+</body>
+</html>
