@@ -27,7 +27,7 @@
 
       historial.push({ role: 'user', content: mensaje });
 
-      const res = await fetch('http://localhost:3000/chat', {
+      const res = await fetch('https://wordpress-ai.vercel.app/api/chat.js', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ historial })
